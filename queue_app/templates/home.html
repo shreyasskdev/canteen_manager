@@ -1,28 +1,148 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container mx-4 my-4">
-    <!-- Order Form -->
-    <div class="bg-white p-6 rounded-lg shadow-md">
-        <h2 class="text-2xl font-bold mb-4">Place Order</h2>
-        <form method="post">
+<div class="container mx-auto my-10 px-6">
+    <!-- Order Form Card -->
+    <div class="max-w-lg mx-auto bg-black text-white p-8 rounded-lg shadow-lg">
+        <h2 class="text-3xl font-semibold mb-6 text-center tracking-wide">Place Order</h2>
+        <form method="post" id="order-form">
             {% csrf_token %}
-            <div class="mb-4">
-                <label class="block mb-2">Name:</label>
-                <input type="text" name="customer_name" required class="w-full p-2 border rounded">
+            <div class="mb-5">
+                <label class="block mb-2 text-gray-400">Name:</label>
+                <input type="text" name="customer_name" required
+                    class="w-full p-3 bg-gray-900 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-gray-500 outline-none">
             </div>
-            <div class="mb-4">
-                <label class="block mb-2">Food Item:</label>
-                <input type="text" name="food_item" required class="w-full p-2 border rounded">
+            <!-- Dynamic Selected Items List -->
+            <div id="selected-items-container" class="mb-5">
+                <h3 class="text-xl font-semibold text-gray-300 mb-2">Selected Food Items:</h3>
+                <p id="no-items" class="text-gray-500">No food items selected yet. Tap on a food card below to add.</p>
             </div>
-            <div class="mb-4">
-                <label class="block mb-2">Quantity:</label>
-                <input type="number" name="quantity" min="1" value="1" class="w-full p-2 border rounded">
-            </div>
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+            <button type="submit"
+                class="w-full bg-white text-black font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-gray-200 transition duration-300">
                 Place Order
             </button>
         </form>
     </div>
+
+    <!-- Bro's Food List Widget -->
+    <div class="max-w-lg mx-auto bg-black text-white p-8 mt-8 rounded-lg shadow-lg">
+        <h3 class="text-2xl font-semibold mb-4 text-center tracking-wide">Bro's Food List</h3>
+        <p class="text-center text-gray-400 mb-6">Tap on a food item to add it to your order!</p>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <button type="button"
+                class="food-item-btn bg-gray-800 hover:bg-gray-700 p-4 rounded-lg transition transform hover:scale-105"
+                data-food="Burger">
+                <span class="block text-3xl mb-2">🍔</span>
+                <span class="block font-semibold">Burger</span>
+            </button>
+            <button type="button"
+                class="food-item-btn bg-gray-800 hover:bg-gray-700 p-4 rounded-lg transition transform hover:scale-105"
+                data-food="Pizza">
+                <span class="block text-3xl mb-2">🍕</span>
+                <span class="block font-semibold">Pizza</span>
+            </button>
+            <button type="button"
+                class="food-item-btn bg-gray-800 hover:bg-gray-700 p-4 rounded-lg transition transform hover:scale-105"
+                data-food="Tacos">
+                <span class="block text-3xl mb-2">🌮</span>
+                <span class="block font-semibold">Tacos</span>
+            </button>
+            <button type="button"
+                class="food-item-btn bg-gray-800 hover:bg-gray-700 p-4 rounded-lg transition transform hover:scale-105"
+                data-food="Wings">
+                <span class="block text-3xl mb-2">🍗</span>
+                <span class="block font-semibold">Wings</span>
+            </button>
+            <button type="button"
+                class="food-item-btn bg-gray-800 hover:bg-gray-700 p-4 rounded-lg transition transform hover:scale-105"
+                data-food="Nachos">
+                <span class="block text-3xl mb-2">🌯</span>
+                <span class="block font-semibold">Nachos</span>
+            </button>
+            <button type="button"
+                class="food-item-btn bg-gray-800 hover:bg-gray-700 p-4 rounded-lg transition transform hover:scale-105"
+                data-food="Fries">
+                <span class="block text-3xl mb-2">🍟</span>
+                <span class="block font-semibold">Fries</span>
+            </button>
+        </div>
+    </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const foodButtons = document.querySelectorAll('.food-item-btn');
+        const selectedItemsContainer = document.getElementById('selected-items-container');
+        const noItemsText = document.getElementById('no-items');
+
+        // Update the visibility of the "no items" text.
+        function updateNoItemsText() {
+            if (selectedItemsContainer.querySelectorAll('.selected-item').length > 0) {
+                noItemsText.style.display = 'none';
+            } else {
+                noItemsText.style.display = 'block';
+            }
+        }
+
+        // Create a new selected item element.
+        function createSelectedItem(foodName) {
+            const itemDiv = document.createElement('div');
+            itemDiv.classList.add('selected-item', 'mb-4', 'p-4', 'bg-gray-800', 'rounded-lg', 'flex', 'items-center', 'justify-between');
+            itemDiv.setAttribute('data-food', foodName);
+
+            // Hidden input for the food name.
+            const hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = 'food_items[]';
+            hiddenInput.value = foodName;
+
+            // Display the food name.
+            const foodLabel = document.createElement('span');
+            foodLabel.classList.add('text-lg', 'font-semibold');
+            foodLabel.textContent = foodName;
+
+            // Quantity input.
+            const qtyInput = document.createElement('input');
+            qtyInput.type = 'number';
+            qtyInput.name = 'quantities[]';
+            qtyInput.value = 1;
+            qtyInput.min = 1;
+            qtyInput.classList.add('w-16', 'ml-4', 'p-2', 'bg-gray-900', 'border', 'border-gray-700', 'rounded-lg', 'text-white', 'focus:ring-2', 'focus:ring-gray-500');
+
+            // Remove button.
+            const removeBtn = document.createElement('button');
+            removeBtn.type = 'button';
+            removeBtn.textContent = 'Remove';
+            removeBtn.classList.add('ml-4', 'text-red-400', 'hover:text-red-600', 'font-semibold');
+            removeBtn.addEventListener('click', function () {
+                itemDiv.remove();
+                updateNoItemsText();
+            });
+
+            itemDiv.appendChild(hiddenInput);
+            itemDiv.appendChild(foodLabel);
+            itemDiv.appendChild(qtyInput);
+            itemDiv.appendChild(removeBtn);
+
+            return itemDiv;
+        }
+
+        // Handle click events on food buttons.
+        foodButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const foodName = button.getAttribute('data-food');
+                let existingItem = selectedItemsContainer.querySelector(`.selected-item[data-food="${foodName}"]`);
+                if (existingItem) {
+                    // Increase the quantity if the item is already selected.
+                    let qtyInput = existingItem.querySelector('input[name="quantities[]"]');
+                    qtyInput.value = parseInt(qtyInput.value) + 1;
+                } else {
+                    const selectedItem = createSelectedItem(foodName);
+                    selectedItemsContainer.appendChild(selectedItem);
+                }
+                updateNoItemsText();
+            });
+        });
+    });
+</script>
 {% endblock %}
