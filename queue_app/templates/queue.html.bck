@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+
 {% block content %}
 <div class="min-h-screen bg-gray-900 flex items-center justify-center py-8 px-4">
     <div class="w-full max-w-4xl">
@@ -54,6 +55,7 @@
                 </div>
             </div>
         </div>
+
         <!-- Queue Position Section -->
         <div class="mt-10 bg-gray-800 p-6 rounded-xl shadow-2xl">
             <h3 class="text-2xl font-semibold text-center text-white">
@@ -68,17 +70,6 @@
                 Our chefs are whipping up the magic. Hold tight for a flavor explosion!
             </p>
         </div>
-        <!-- Estimated Waiting Time Section -->
-        <!-- <div class="mt-8 bg-gray-800 p-6 rounded-xl shadow-2xl">
-            <h3 class="text-2xl font-semibold text-center text-white">
-                Estimated Waiting Time:
-                <span class="text-yellow-400 text-3xl font-bold">{{ order_data }} minutes</span>
-            </h3>
-            <p class="mt-4 text-center text-gray-300 italic">
-                This is based on the current queue and preparation time.
-            </p>
-        </div> -->
-
     </div>
 </div>
 {% endblock %}
