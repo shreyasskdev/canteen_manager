@@ -1,73 +1,124 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container mx-auto my-10 px-6">
-    <!-- Order Form Card -->
-    <div class="max-w-lg mx-auto bg-black text-white p-8 rounded-lg shadow-lg">
-        <h2 class="text-3xl font-semibold mb-6 text-center tracking-wide">Place Order</h2>
-        <form method="post" id="order-form">
-            {% csrf_token %}
-            <div class="mb-5">
-                <label class="block mb-2 text-gray-400">Name:</label>
-                <input type="text" name="customer_name" required
-                    class="w-full p-3 bg-gray-900 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-gray-500 outline-none">
-            </div>
-            <!-- Dynamic Selected Items List -->
-            <div id="selected-items-container" class="mb-5">
-                <h3 class="text-xl font-semibold text-gray-300 mb-2">Selected Food Items:</h3>
-                <p id="no-items" class="text-gray-500">No food items selected yet. Tap on a food card below to add.</p>
-            </div>
-            <button type="submit"
-                class="w-full bg-white text-black font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-gray-200 transition duration-300">
-                Place Order
-            </button>
-        </form>
-    </div>
+<div class="min-h-screen bg-cover bg-center bg-fixed" style="background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/static/images/restaurant-bg.jpg');">
+    <div class="container mx-auto py-16 px-6">
+        <!-- Hero Section -->
+        <div class="text-center mb-12">
+            <h1 class="text-5xl font-bold text-white mb-4">Your Food Order</h1>
+            <p class="text-xl text-gray-300">Quick, easy, and delicious!</p>
+        </div>
 
-    <!-- Bro's Food List Widget -->
-    <div class="max-w-lg mx-auto bg-black text-white p-8 mt-8 rounded-lg shadow-lg">
-        <h3 class="text-2xl font-semibold mb-4 text-center tracking-wide">Bro's Food List</h3>
-        <p class="text-center text-gray-400 mb-6">Tap on a food item to add it to your order!</p>
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-            <button type="button"
-                class="food-item-btn bg-gray-800 hover:bg-gray-700 p-4 rounded-lg transition transform hover:scale-105"
-                data-food="Burger">
-                <span class="block text-3xl mb-2">🍔</span>
-                <span class="block font-semibold">Burger</span>
-            </button>
-            <button type="button"
-                class="food-item-btn bg-gray-800 hover:bg-gray-700 p-4 rounded-lg transition transform hover:scale-105"
-                data-food="Pizza">
-                <span class="block text-3xl mb-2">🍕</span>
-                <span class="block font-semibold">Pizza</span>
-            </button>
-            <button type="button"
-                class="food-item-btn bg-gray-800 hover:bg-gray-700 p-4 rounded-lg transition transform hover:scale-105"
-                data-food="Tacos">
-                <span class="block text-3xl mb-2">🌮</span>
-                <span class="block font-semibold">Tacos</span>
-            </button>
-            <button type="button"
-                class="food-item-btn bg-gray-800 hover:bg-gray-700 p-4 rounded-lg transition transform hover:scale-105"
-                data-food="Wings">
-                <span class="block text-3xl mb-2">🍗</span>
-                <span class="block font-semibold">Wings</span>
-            </button>
-            <button type="button"
-                class="food-item-btn bg-gray-800 hover:bg-gray-700 p-4 rounded-lg transition transform hover:scale-105"
-                data-food="Nachos">
-                <span class="block text-3xl mb-2">🌯</span>
-                <span class="block font-semibold">Nachos</span>
-            </button>
-            <button type="button"
-                class="food-item-btn bg-gray-800 hover:bg-gray-700 p-4 rounded-lg transition transform hover:scale-105"
-                data-food="Fries">
-                <span class="block text-3xl mb-2">🍟</span>
-                <span class="block font-semibold">Fries</span>
-            </button>
+        <!-- Order Form Card -->
+        <div class="max-w-lg mx-auto bg-black/80 backdrop-blur-md text-white p-8 rounded-2xl shadow-2xl border border-gray-700">
+            <h2 class="text-3xl font-semibold mb-6 text-center tracking-wide">Place Order</h2>
+            <form method="post" id="order-form">
+                {% csrf_token %}
+                <div class="mb-5">
+                    <label class="block mb-2 text-gray-300">Name:</label>
+                    <input type="text" name="customer_name" required
+                        class="w-full p-3 bg-gray-900/50 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-200">
+                </div>
+                <!-- Dynamic Selected Items List -->
+                <div id="selected-items-container" class="mb-5">
+                    <h3 class="text-xl font-semibold text-gray-300 mb-2">Selected Food Items:</h3>
+                    <p id="no-items" class="text-gray-400">No food items selected yet. Tap on a food card below to add.</p>
+                </div>
+                <button type="submit"
+                    class="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white font-semibold px-6 py-3 rounded-lg shadow-lg hover:from-blue-700 hover:to-blue-900 transform hover:scale-[1.02] transition duration-300">
+                    Place Order
+                </button>
+            </form>
+        </div>
+
+        <!-- Food Menu Grid -->
+        <div class="max-w-6xl mx-auto bg-black/80 backdrop-blur-md text-white p-8 mt-8 rounded-2xl shadow-2xl border border-gray-700">
+            <h3 class="text-2xl font-semibold mb-8 text-center tracking-wide">Our Menu</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Biriyani -->
+                <button type="button" class="food-item-btn group relative overflow-hidden rounded-xl" data-food="Biriyani">
+                    <img src="/static/images/menu/biriyani.png" alt="biriyani" 
+                         class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent p-4 flex flex-col justify-end">
+                        <span class="text-xl font-bold mb-1">Biriyani</span>
+                        <span class="text-gray-300 text-sm mb-2">Classic Talassery Biriyani</span>
+                        <span class="text-blue-400 font-semibold">70 Rs</span>
+                    </div>
+                </button>
+
+                <!-- Boiled Rice -->
+                <button type="button" class="food-item-btn group relative overflow-hidden rounded-xl" data-food="Boiled Rice">
+                    <img src="/static/images/menu/rice.png" alt="Boiled Rice" 
+                         class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent p-4 flex flex-col justify-end">
+                        <span class="text-xl font-bold mb-1">Boiled Rice</span>
+                        <span class="text-gray-300 text-sm mb-2">Rice with 3 Curries</span>
+                        <span class="text-blue-400 font-semibold">25 Rs</span>
+                    </div>
+                </button>
+
+                <!-- Dosa -->
+                <button type="button" class="food-item-btn group relative overflow-hidden rounded-xl" data-food="Dosa">
+                    <img src="/static/images/menu/dosa.png" alt="Dosa" 
+                         class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent p-4 flex flex-col justify-end">
+                        <span class="text-xl font-bold mb-1">Dosa</span>
+                        <span class="text-gray-300 text-sm mb-2">Kerala Style Dosa</span>
+                        <span class="text-blue-400 font-semibold">20 Rs</span>
+                    </div>
+                </button>
+
+                <!-- Puttu -->
+                <button type="button" class="food-item-btn group relative overflow-hidden rounded-xl" data-food="Puttu">
+                    <img src="/static/images/menu/Puttu.png" alt="Puttu" 
+                         class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent p-4 flex flex-col justify-end">
+                        <span class="text-xl font-bold mb-1">Puttum and kadalakari</span>
+                        <span class="text-gray-300 text-sm mb-2">Puttum and kadalakari</span>
+                        <span class="text-blue-400 font-semibold">25 Rs</span>
+                    </div>
+                </button>
+
+                <!-- Pazhampori -->
+                <button type="button" class="food-item-btn group relative overflow-hidden rounded-xl" data-food="Pazhampori">
+                    <img src="/static/images/menu/pazhampori.png" alt="Pazhampori" 
+                         class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent p-4 flex flex-col justify-end">
+                        <span class="text-xl font-bold mb-1">Pazhampori</span>
+                        <span class="text-gray-300 text-sm mb-2">Crispy Pazhampori</span>
+                        <span class="text-blue-400 font-semibold">10 Rs</span>
+                    </div>
+                </button>
+
+                <!-- Samoosa -->
+                <button type="button" class="food-item-btn group relative overflow-hidden rounded-xl" data-food="Samoosa">
+                    <img src="/static/images/menu/samoosa.png" alt="Samoosa" 
+                         class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent p-4 flex flex-col justify-end">
+                        <span class="text-xl font-bold mb-1">Samoosa</span>
+                        <span class="text-gray-300 text-sm mb-2">Crispy veg Samoosa</span>
+                        <span class="text-blue-400 font-semibold">10 Rs</span>
+                    </div>
+                </button>
+            </div>
         </div>
     </div>
 </div>
+
+<style>
+    .food-item-btn::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: rgba(59, 130, 246, 0.1);
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .food-item-btn:hover::after {
+        opacity: 1;
+    }
+</style>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
