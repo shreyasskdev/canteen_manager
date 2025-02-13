@@ -1,0 +1,45 @@
+/* Admin list view enhancements */
+#changelist-form .column-get_order_details {
+    width: 35%;
+}
+
+#changelist-form .column-get_status_badge {
+    width: 100px;
+    text-align: center;
+}
+
+#changelist-form .column-waiting_time {
+    width: 120px;
+}
+
+/* Table row hover effect - changed to a more subtle color */
+#changelist-form tbody tr {
+    background-color: rgb(0, 0, 0);
+}
+
+#changelist-form tbody tr:hover {
+    background-color: #000000;
+    transition: background-color 0.2s ease;
+}
+
+/* Custom header styling */
+#changelist-form thead th {
+    background-color: #000000;
+    font-weight: bold;
+}
+
+/* Alternating row colors for better readability */
+#changelist-form tbody tr:nth-child(even) {
+    background-color: #000000;
+}
+
+#changelist-form tbody tr:nth-child(even):hover {
+    background-color: #000000;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    #changelist-form .column-get_order_details {
+        width: 50%;
+    }
+} 
