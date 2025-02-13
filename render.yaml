@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: canteen-manager
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn canteen.wsgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9.0
+      - key: DJANGO_DEBUG
+        value: False
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        sync: false 
