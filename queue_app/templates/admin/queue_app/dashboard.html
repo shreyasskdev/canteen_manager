@@ -1,0 +1,75 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'admin/css/custom_admin.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Orders Overview -->
+    <div class="grid-container">
+        <!-- Pending Orders -->
+        <div class="card pending-orders">
+            <div class="card-header">
+                <img src="https://cdn-icons-png.flaticon.com/512/1046/1046876.png" alt="Pending" class="header-icon">
+                <h2>Pending Orders</h2>
+            </div>
+            <div class="card-content">
+                {% for order in pending_orders %}
+                    <div class="order-item pending">
+                        {% with order_data=order.data|safe %}
+                            <div class="order-details">
+                                <span class="order-number">#{{ order.id }}</span>
+                                <span class="customer-name">{{ order_data.customer_name }}</span>
+                                <span class="food-item">{{ order_data.food_item }} (x{{ order_data.quantity }})</span>
+                                <span class="time">{{ order.created_at|timesince }} ago</span>
+                            </div>
+                            <div class="order-actions">
+                                <form method="post" action="{% url 'admin:queue_app_queueitem_changelist' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="mark_as_processed">
+                                    <input type="hidden" name="_selected_action" value="{{ order.id }}">
+                                    <button type="submit" class="complete-button">Complete</button>
+                                </form>
+                            </div>
+                        {% endwith %}
+                    </div>
+                {% empty %}
+                    <div class="empty-state">
+                        <img src="https://cdn-icons-png.flaticon.com/512/1046/1046875.png" alt="No Orders" class="empty-icon">
+                        <p>No pending orders</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Completed Orders -->
+        <div class="card completed-orders">
+            <div class="card-header">
+                <img src="https://cdn-icons-png.flaticon.com/512/1046/1046784.png" alt="Completed" class="header-icon">
+                <h2>Recent Completed Orders</h2>
+            </div>
+            <div class="card-content">
+                {% for order in completed_orders %}
+                    <div class="order-item completed">
+                        {% with order_data=order.data|safe %}
+                            <div class="order-details">
+                                <span class="order-number">#{{ order.id }}</span>
+                                <span class="customer-name">{{ order_data.customer_name }}</span>
+                                <span class="food-item">{{ order_data.food_item }} (x{{ order_data.quantity }})</span>
+                                <span class="time">{{ order.created_at|timesince }} ago</span>
+                            </div>
+                        {% endwith %}
+                    </div>
+                {% empty %}
+                    <div class="empty-state">
+                        <img src="https://cdn-icons-png.flaticon.com/512/1046/1046875.png" alt="No Orders" class="empty-icon">
+                        <p>No completed orders</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

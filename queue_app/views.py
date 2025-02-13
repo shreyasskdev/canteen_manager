@@ -13,7 +13,10 @@ def home(request):
         order = QueueItem.push(order_data)
         request.session['order_id'] = order.id
         return redirect('/queue')  # Redirect to the queue view
-    return render(request, 'home.html')
+    
+    # Get all unprocessed queue items
+    queue_items = QueueItem.objects.filter(processed=False).order_by('created_at')
+    return render(request, 'home.html', {'queue_items': queue_items})
 
 def queue_view(request):
     # Retrieve the order id from session.
