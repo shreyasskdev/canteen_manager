@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-
 {% block content %}
 <div class="min-h-screen bg-gray-900 flex items-center justify-center py-8 px-4">
     <div class="w-full max-w-4xl">
@@ -55,7 +54,6 @@
                 </div>
             </div>
         </div>
-
         <!-- Queue Position Section -->
         <div class="mt-10 bg-gray-800 p-6 rounded-xl shadow-2xl">
             <h3 class="text-2xl font-semibold text-center text-white">
@@ -64,11 +62,21 @@
             </h3>
             <div class="mt-4 w-full h-4 bg-gray-700 rounded-full">
                 <div class="h-4 rounded-full bg-green-400 transition-all duration-500 ease-in-out"
-                    style="width: {{ position|add:'-1' }}0%;"></div>
+                    style="width: {{ position|add:'-1' }}%;"></div>
             </div>
+
             <p class="mt-4 text-center text-gray-300 italic">
                 Our chefs are whipping up the magic. Hold tight for a flavor explosion!
             </p>
+        </div>
+        <!-- Cancel Order Button -->
+        <div class="mt-8 text-center">
+            <form action="{% url 'queue_app:cancel_order' order_id=order.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="bg-white hover:bg-white text-black font-bold py-2 px-4 rounded">
+                    Cancel Order
+                </button>
+            </form>
         </div>
     </div>
 </div>
