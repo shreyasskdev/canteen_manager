@@ -6,6 +6,7 @@
 
 from django.shortcuts import render, redirect
 from .models import QueueItem
+import json
 
 def home(request):
     if request.method == 'POST':
@@ -14,8 +15,25 @@ def home(request):
             'food_item': request.POST.get('food_item'),
             'quantity': request.POST.get('quantity')
         }
-        QueueItem.push(order_data)
-        return redirect('queue_app:home')  # Update this line
+        queue_item = QueueItem.push(order_data)
+        return redirect('queue_app:order_confirmation', order_id=queue_item.id)
     
     queue_items = QueueItem.objects.filter(processed=False).order_by('created_at')
     return render(request, 'home.html', {'queue_items': queue_items})
+
+def order_confirmation(request, order_id):
+    try:
+        order = QueueItem.objects.get(id=order_id)
+        # Get position in queue (count of unprocessed orders created before this one)
+        position = QueueItem.objects.filter(
+            processed=False,
+            created_at__lte=order.created_at
+        ).count()
+        
+        return render(request, 'order_confirmation.html', {
+            'order': json.loads(order.data),
+            'position': position,
+            'created_at': order.created_at
+        })
+    except QueueItem.DoesNotExist:
+        return redirect('queue_app:home')
