@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-4 my-4">
+    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+        <h2 class="text-2xl font-bold mb-4">Order Confirmation</h2>
+        <div class="mb-6">
+            <p class="text-lg mb-2">Thank you for your order, {{ order.customer_name }}!</p>
+            <p class="text-green-600 font-bold mb-4">You are in position #{{ position }} in the queue</p>
+            <div class="border-t pt-4">
+                <h3 class="font-bold mb-2">Order Details:</h3>
+                <p>Item: {{ order.food_item }}</p>
+                <p>Quantity: {{ order.quantity }}</p>
+                <p class="text-gray-500">Ordered at: {{ created_at|time }}</p>
+            </div>
+        </div>
+        <a href="{% url 'queue_app:home' %}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+            Back to Home
+        </a>
+    </div>
+</div>
+{% endblock %} 
