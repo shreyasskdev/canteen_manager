@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, transaction
 import json
 from django.utils import timezone
 
