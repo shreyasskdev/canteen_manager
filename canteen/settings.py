@@ -25,7 +25,10 @@ SECRET_KEY = 'django-insecure-3)cs@qtf$grs$o%618xvy8trc74ykbykax592d1p*57ocaw6bp
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'canteenmanager.onrender.com',
+    'localhost',  # For local development
+    '127.0.0.1',]
 
 
 # Application definition
