@@ -1,10 +1,14 @@
-from django.shortcuts import render, redirect
+# from django.shortcuts import render, redirect
+# import json
+# from .models import QueueItem
+
+# from django.shortcuts import render, get_object_or_404
+# import json
+# from django.utils.timezone import now
+
+from django.shortcuts import render, redirect, get_object_or_404
 import json
 from .models import QueueItem
-
-from django.shortcuts import render, get_object_or_404
-import json
-from django.utils.timezone import now
 
 # def home(request):
 #     if request.method == 'POST':
@@ -85,6 +89,22 @@ def pop_queue(request):
             context['message'] = 'No orders to pop.'
     return render(request, 'pop_queue.html', context)
 
+def cancel_order(request, order_id):
+    """Cancel an order"""
+    order = get_object_or_404(QueueItem, id=order_id)
+    if not order.processed and not order.cancelled:
+        QueueItem.cancel_order(order_id)
+        # Optionally, you can add a success message here
+    return redirect('/queue')
+
+# def cancel_order(request, order_id):
+#     """Cancel an order by marking it as processed"""
+#     order = get_object_or_404(QueueItem, id=order_id)
+#     if not order.processed:
+#         order.processed = True
+#         order.save()
+#         # Optionally, add a success message here
+#     return redirect('queue_app:queue')
 
 # def calculate_queue_position(order):
 #     """

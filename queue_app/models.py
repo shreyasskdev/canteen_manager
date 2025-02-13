@@ -6,6 +6,7 @@ class QueueItem(models.Model):
     data = models.TextField()
     created_at = models.DateTimeField(default=timezone.now)
     processed = models.BooleanField(default=False)
+    cancelled = models.BooleanField(default=False)  # New field
 
     class Meta:
         indexes = [
@@ -19,6 +20,21 @@ class QueueItem(models.Model):
         json_data = json.dumps(data)
         return cls.objects.create(data=json_data)
 
+    # @classmethod
+    # def pop(cls):
+    #     """Get and remove next item from queue"""
+    #     # Use select_for_update() to prevent race conditions in concurrent environments
+    #     with transaction.atomic():
+    #         item = (cls.objects
+    #                .select_for_update()
+    #                .filter(processed=False)
+    #                .first())
+            
+    #         if item:
+    #             item.processed = True
+    #             item.save()
+    #             return json.loads(item.data)
+    #         return None
     @classmethod
     def pop(cls):
         """Get and remove next item from queue"""
@@ -26,7 +42,7 @@ class QueueItem(models.Model):
         with transaction.atomic():
             item = (cls.objects
                    .select_for_update()
-                   .filter(processed=False)
+                   .filter(processed=False, cancelled=False)  # Exclude cancelled orders
                    .first())
             
             if item:
@@ -34,6 +50,14 @@ class QueueItem(models.Model):
                 item.save()
                 return json.loads(item.data)
             return None
+
+    @classmethod
+    def cancel_order(cls, order_id):
+        """Cancel an order by marking it as cancelled"""
+        with transaction.atomic():
+            item = cls.objects.select_for_update().get(id=order_id)
+            item.cancelled = True
+            item.save()
 
     @classmethod
     def peek(cls):
