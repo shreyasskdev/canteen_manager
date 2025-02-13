@@ -8,5 +8,5 @@ urlpatterns = [
     path('queue/', views.queue_view, name='queue'),
     path('pop/', views.pop_queue, name='pop_queue'),
 
-    # path('order/<int:order_id>/', views.order_detail_view, name='order_detail'),
+    path('cancel/<int:order_id>/', views.cancel_order, name='cancel_order'),  
 ]

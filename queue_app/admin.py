@@ -106,6 +106,11 @@ class QueueItemAdmin(admin.ModelAdmin):
                 '<span style="background-color: #28a745; color: white; padding: 3px 10px; '
                 'border-radius: 10px;">Completed</span>'
             )
+        if obj.cancelled:
+            return format_html(
+                '<span style="background-color: #F10808FF; color: white; padding: 3px 10px; '
+                'border-radius: 10px;">Canceled</span>'
+            )
         return format_html(
             '<span style="background-color: #ffc107; color: black; padding: 3px 10px; '
                 'border-radius: 10px;">Pending</span>'
