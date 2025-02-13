@@ -19,12 +19,21 @@
 
 <body class="bg-gradient-to-br from-gray-800 to-gray-900 text-white min-h-screen flex flex-col">
     <!-- Navbar -->
-    <nav class="bg-transparent border-b border-gray-700 py-4">
-        <div class="container mx-auto px-6 flex justify-between items-center">
-            <h1 class="text-4xl font-bold tracking-wide">🍽 Food Queue System</h1>
-            <div class="space-x-4">
-                <a href="/admin" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition duration-300">Dashboard</a>
-                <!-- <a href="#" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition duration-300">Profile</a> -->
+    <nav class="bg-gray-900 border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo and Title -->
+                <a href="{% url 'queue_app:home' %}" class="flex items-center text-white hover:text-gray-300 transition">
+                    <span class="text-xl font-bold">Food Queue System</span>
+                </a>
+
+                <!-- Navigation Links -->
+                <div class="flex items-center space-x-4">
+                    <a href="{% url 'admin:index' %}" target="_blank" rel="noopener noreferrer"
+                        class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition">
+                        Dashboard
+                    </a>
+                </div>
             </div>
         </div>
     </nav>
