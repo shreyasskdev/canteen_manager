@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-4 my-4">
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold mb-4">Your Order</h2>
+        <p><strong>Order #{{ order.id }}</strong></p>
+        <p>Customer: {{ order_data.customer_name }}</p>
+        <p>Food Item: {{ order_data.food_item }}</p>
+        <p>Quantity: {{ order_data.quantity }}</p>
+        <h3 class="mt-4">Your Queue Position: {{ position }}</h3>
+    </div>
+</div>
+{% endblock %}
