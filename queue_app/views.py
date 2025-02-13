@@ -50,6 +50,36 @@ def home(request):
     queue_items = QueueItem.objects.filter(processed=False).order_by('created_at')
     return render(request, 'home.html', {'queue_items': queue_items})
 
+# def queue_view(request):
+#     # Retrieve the order id from session.
+#     order_id = request.session.get('order_id')
+#     if not order_id:
+#         return redirect('/')  # If no order found, send back to home
+    
+#     try:
+#         order = QueueItem.objects.get(id=order_id)
+#     except QueueItem.DoesNotExist:
+#         return redirect('/')
+    
+#     # Determine the current queue position:
+#     pending_orders = list(QueueItem.objects.filter(processed=False).order_by('created_at'))
+#     try:
+#         # Find the index of the current order (list index starts at 0, so add 1).
+#         position = pending_orders.index(order) + 1
+#     except ValueError:
+#         position = 'Processed'
+    
+#     # Decode the stored JSON data for display.
+#     order_data = json.loads(order.data)
+    
+#     return render(request, 'queue.html', {
+#         'order': order,
+#         'order_data': order_data,
+#         'position': position
+#     })
+from django.utils import timezone
+from datetime import timedelta
+
 def queue_view(request):
     # Retrieve the order id from session.
     order_id = request.session.get('order_id')
@@ -62,7 +92,7 @@ def queue_view(request):
         return redirect('/')
     
     # Determine the current queue position:
-    pending_orders = list(QueueItem.objects.filter(processed=False).order_by('created_at'))
+    pending_orders = list(QueueItem.objects.filter(processed=False, cancelled=False).order_by('created_at'))
     try:
         # Find the index of the current order (list index starts at 0, so add 1).
         position = pending_orders.index(order) + 1
@@ -72,10 +102,31 @@ def queue_view(request):
     # Decode the stored JSON data for display.
     order_data = json.loads(order.data)
     
+    # Define the average processing time per order (in minutes)
+    avg_processing_time_per_order = 4  # Example: 10 minutes per order
+    
+    # Calculate ETA in minutes
+    if order.processed:
+        eta = "Completed"
+    else:
+        # Calculate the total estimated time based on position
+        estimated_minutes = position * avg_processing_time_per_order
+        eta = f"{estimated_minutes}min"
+    
+    # Calculate waiting time
+    if order.processed:
+        waiting_time = "Completed"
+    else:
+        delta = timezone.now() - order.created_at
+        minutes = int(delta.total_seconds() / 60)
+        waiting_time = f"{minutes} minutes"
+    
     return render(request, 'queue.html', {
         'order': order,
         'order_data': order_data,
-        'position': position
+        'position': position,
+        'waiting_time': waiting_time,  # Pass waiting time to the template
+        'eta': eta,  # Pass ETA to the template
     })
 
 def pop_queue(request):
