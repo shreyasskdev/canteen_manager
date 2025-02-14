@@ -23,6 +23,12 @@
                 <div id="selected-items-container" class="mb-5">
                     <h3 class="text-xl font-semibold text-gray-300 mb-2">Selected Food Items:</h3>
                     <p id="no-items" class="text-gray-400">No food items selected yet. Tap on a food card below to add.</p>
+                    <!-- Add total amount display -->
+                    <div id="total-amount" class="mt-4 pt-4 border-t border-gray-700 hidden">
+                        <p class="text-xl font-semibold text-green-400">
+                            Total Amount: ₹<span id="amount-value">0</span>
+                        </p>
+                    </div>
                 </div>
                 <button type="submit"
                     class="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white font-semibold px-6 py-3 rounded-lg shadow-lg hover:from-blue-700 hover:to-blue-900 transform hover:scale-[1.02] transition duration-300">
@@ -125,42 +131,73 @@
         const foodButtons = document.querySelectorAll('.food-item-btn');
         const selectedItemsContainer = document.getElementById('selected-items-container');
         const noItemsText = document.getElementById('no-items');
+        const totalAmountDiv = document.getElementById('total-amount');
+        const amountValue = document.getElementById('amount-value');
 
-        // Update the visibility of the "no items" text.
+        // Food prices mapping
+        const foodPrices = {
+            'Biriyani': 70,
+            'Boiled Rice': 25,
+            'Dosa': 20,
+            'Puttu': 25,
+            'Pazhampori': 10,
+            'Samoosa': 10
+        };
+
+        // Calculate total amount
+        function calculateTotal() {
+            let total = 0;
+            const items = selectedItemsContainer.querySelectorAll('.selected-item');
+            items.forEach(item => {
+                const foodName = item.getAttribute('data-food');
+                const quantity = parseInt(item.querySelector('input[name="quantities[]"]').value);
+                total += foodPrices[foodName] * quantity;
+            });
+            return total;
+        }
+
+        // Update total amount display
+        function updateTotalDisplay() {
+            const total = calculateTotal();
+            amountValue.textContent = total;
+            totalAmountDiv.style.display = total > 0 ? 'block' : 'none';
+        }
+
+        // Update the visibility of the "no items" text
         function updateNoItemsText() {
             if (selectedItemsContainer.querySelectorAll('.selected-item').length > 0) {
                 noItemsText.style.display = 'none';
             } else {
                 noItemsText.style.display = 'block';
             }
+            updateTotalDisplay();
         }
 
-        // Create a new selected item element.
+        // Create a new selected item element
         function createSelectedItem(foodName) {
             const itemDiv = document.createElement('div');
             itemDiv.classList.add('selected-item', 'mb-4', 'p-4', 'bg-gray-800', 'rounded-lg', 'flex', 'items-center', 'justify-between');
             itemDiv.setAttribute('data-food', foodName);
 
-            // Hidden input for the food name.
             const hiddenInput = document.createElement('input');
             hiddenInput.type = 'hidden';
             hiddenInput.name = 'food_items[]';
             hiddenInput.value = foodName;
 
-            // Display the food name.
             const foodLabel = document.createElement('span');
             foodLabel.classList.add('text-lg', 'font-semibold');
-            foodLabel.textContent = foodName;
+            foodLabel.textContent = `${foodName} (₹${foodPrices[foodName]})`;
 
-            // Quantity input.
             const qtyInput = document.createElement('input');
             qtyInput.type = 'number';
             qtyInput.name = 'quantities[]';
             qtyInput.value = 1;
             qtyInput.min = 1;
             qtyInput.classList.add('w-16', 'ml-4', 'p-2', 'bg-gray-900', 'border', 'border-gray-700', 'rounded-lg', 'text-white', 'focus:ring-2', 'focus:ring-gray-500');
+            
+            // Add event listener for quantity changes
+            qtyInput.addEventListener('change', updateTotalDisplay);
 
-            // Remove button.
             const removeBtn = document.createElement('button');
             removeBtn.type = 'button';
             removeBtn.textContent = 'Remove';
@@ -178,18 +215,18 @@
             return itemDiv;
         }
 
-        // Handle click events on food buttons.
+        // Handle click events on food buttons
         foodButtons.forEach(button => {
             button.addEventListener('click', function () {
                 const foodName = button.getAttribute('data-food');
                 let existingItem = selectedItemsContainer.querySelector(`.selected-item[data-food="${foodName}"]`);
                 if (existingItem) {
-                    // Increase the quantity if the item is already selected.
                     let qtyInput = existingItem.querySelector('input[name="quantities[]"]');
                     qtyInput.value = parseInt(qtyInput.value) + 1;
+                    updateTotalDisplay();
                 } else {
                     const selectedItem = createSelectedItem(foodName);
-                    selectedItemsContainer.appendChild(selectedItem);
+                    selectedItemsContainer.insertBefore(selectedItem, totalAmountDiv);
                 }
                 updateNoItemsText();
             });
