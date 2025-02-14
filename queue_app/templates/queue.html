@@ -1,43 +1,44 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="min-h-screen bg-gray-900 flex items-center justify-center py-4 sm:py-8 px-4">
+<div class="min-h-screen bg-gray-900 flex items-center justify-center py-8 px-4">
     <div class="w-full max-w-4xl">
-        <h2 class="text-3xl sm:text-4xl font-bold text-center text-white mb-6 sm:mb-8">
+        <h2 class="text-4xl font-bold text-center text-white mb-8">
             Welcome to Your Culinary Adventure!
         </h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <!-- Sizzling Order Widget -->
-            <div class="bg-gradient-to-r from-green-500 to-blue-500 p-4 sm:p-6 rounded-xl shadow-xl transform hover:scale-105 transition duration-300">
+            <div
+                class="bg-gradient-to-r from-green-500 to-blue-500 p-6 rounded-xl shadow-xl transform hover:scale-105 transition duration-300">
                 <div class="flex items-center">
-                    <span class="text-3xl sm:text-4xl mr-3 sm:mr-4">🍽️</span>
+                    <span class="text-4xl mr-4">🍽️</span>
                     <div>
-                        <p class="text-base sm:text-lg font-semibold text-white">Sizzling Order</p>
-                        <p class="text-xl sm:text-2xl font-bold text-white">#{{ order.id }}</p>
+                        <p class="text-lg font-semibold text-white">Sizzling Order</p>
+                        <p class="text-2xl font-bold text-white">#{{ order.id }}</p>
                     </div>
                 </div>
             </div>
-
             <!-- Foodie Name Widget -->
-            <div class="bg-gradient-to-r from-purple-500 to-pink-500 p-4 sm:p-6 rounded-xl shadow-xl transform hover:scale-105 transition duration-300">
+            <div
+                class="bg-gradient-to-r from-purple-500 to-pink-500 p-6 rounded-xl shadow-xl transform hover:scale-105 transition duration-300">
                 <div class="flex items-center">
-                    <span class="text-3xl sm:text-4xl mr-3 sm:mr-4">👤</span>
+                    <span class="text-4xl mr-4">👤</span>
                     <div>
-                        <p class="text-base sm:text-lg font-semibold text-white">Foodie Name</p>
-                        <p class="text-xl sm:text-2xl font-bold text-white">{{ order_data.customer_name }}</p>
+                        <p class="text-lg font-semibold text-white">Foodie Name</p>
+                        <p class="text-2xl font-bold text-white">{{ order_data.customer_name }}</p>
                     </div>
                 </div>
             </div>
-
-            <!-- Culinary Selections Widget -->
-            <div class="bg-gradient-to-r from-yellow-500 to-orange-500 p-4 sm:p-6 rounded-xl shadow-xl transform hover:scale-105 transition duration-300 sm:col-span-2">
-                <div class="flex items-center mb-3 sm:mb-4">
-                    <span class="text-3xl sm:text-4xl mr-3 sm:mr-4">🍲</span>
+            <!-- Culinary Selections Widget (Multiple Items with Quantities) -->
+            <div
+                class="bg-gradient-to-r from-yellow-500 to-orange-500 p-6 rounded-xl shadow-xl transform hover:scale-105 transition duration-300 sm:col-span-2">
+                <div class="flex items-center mb-4">
+                    <span class="text-4xl mr-4">🍲</span>
                     <div>
-                        <p class="text-base sm:text-lg font-semibold text-white">Culinary Selections</p>
+                        <p class="text-lg font-semibold text-white">Culinary Selections</p>
                         <p class="text-sm text-gray-100">Feast on these hand-picked delights:</p>
                     </div>
                 </div>
-                <div class="mt-2">
+                <div>
                     {% if order_data.food_items %}
                     <ul class="divide-y divide-gray-700">
                         {% for item in order_data.food_items %}
@@ -53,39 +54,46 @@
                 </div>
             </div>
         </div>
-
         <!-- Queue Position Section -->
-        <div class="mt-6 sm:mt-10 bg-gray-800 p-4 sm:p-6 rounded-xl shadow-2xl">
-            <h3 class="text-xl sm:text-2xl font-semibold text-center text-white">
+        <div class="mt-10 bg-gray-800 p-6 rounded-xl shadow-2xl">
+            <h3 class="text-2xl font-semibold text-center text-white">
                 Your Place in the Feast Queue:
-                <span class="text-green-400 text-2xl sm:text-3xl font-bold animate-pulse">{{ position }}</span>
+                <span class="text-green-400 text-3xl font-bold animate-pulse">{{ position }}</span>
             </h3>
             <div class="mt-4 w-full h-4 bg-gray-700 rounded-full">
-                <div class="h-4 rounded-full bg-green-400 transition-all duration-500 ease-in-out progress-bar"
-                    data-progress="{{ position }}"></div>
+                <div class="h-4 rounded-full bg-green-400 transition-all duration-500 ease-in-out"
+                    style="width: {{ position }}5%;"></div>
             </div>
-            <p class="mt-4 text-center text-sm sm:text-base text-gray-300 italic">
+            <p class="mt-4 text-center text-gray-300 italic">
                 Our chefs are whipping up the magic. Hold tight for a flavor explosion!
             </p>
         </div>
-
-        <!-- Estimated Completion Time Section -->
-        <div class="mt-6 sm:mt-8 bg-gray-800 p-4 sm:p-6 rounded-xl shadow-2xl">
-            <h3 class="text-xl sm:text-2xl font-semibold text-center text-white">
-                Estimated Completion Time:
-                <span class="text-yellow-400 text-2xl sm:text-3xl font-bold">{{ eta }}</span>
+        <!-- Estimated Waiting Time Section
+        <div class="mt-8 bg-gray-800 p-6 rounded-xl shadow-2xl">
+            <h3 class="text-2xl font-semibold text-center text-white">
+                Estimated Waiting Time:
+                <span class="text-yellow-400 text-3xl font-bold">{{ waiting_time }}</span>
             </h3>
-            <p class="mt-4 text-center text-sm sm:text-base text-gray-300 italic">
+            <p class="mt-4 text-center text-gray-300 italic">
+                This is based on the current queue and preparation time.
+            </p>
+        </div> -->
+        <!-- Estimated Completion Time Section -->
+        <!-- Estimated Completion Time Section -->
+        <div class="mt-8 bg-gray-800 p-6 rounded-xl shadow-2xl">
+            <h3 class="text-2xl font-semibold text-center text-white">
+                Estimated Completion Time:
+                <span class="text-yellow-400 text-3xl font-bold">{{ eta }}</span>
+            </h3>
+            <p class="mt-4 text-center text-gray-300 italic">
                 This is based on the current queue and preparation time.
             </p>
         </div>
-
         <!-- Cancel Order Button -->
-        <div class="mt-6 sm:mt-8 text-center">
+        <div class="mt-8 text-center">
             <form action="{% url 'queue_app:cancel_order' order_id=order.id %}" method="post">
                 {% csrf_token %}
-                <button type="submit" 
-                    class="bg-white hover:bg-gray-100 text-black font-bold py-2 px-4 sm:py-3 sm:px-6 rounded transition duration-300">
+                <button type="submit" class="bg-white hover:bg-white text-black font-bold py-2 px-4 rounded">
                     Cancel Order
                 </button>
             </form>
