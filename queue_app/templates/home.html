@@ -12,7 +12,7 @@
         <!-- Order Form Card -->
         <div class="max-w-lg mx-auto bg-black/80 backdrop-blur-md text-white p-8 rounded-2xl shadow-2xl border border-gray-700">
             <h2 class="text-3xl font-semibold mb-6 text-center tracking-wide">Place Order</h2>
-            <form method="post" id="order-form">
+            <form method="post" id="order-form" onsubmit="return validateForm()">
                 {% csrf_token %}
                 <div class="mb-5">
                     <label class="block mb-2 text-gray-300">Name:</label>
@@ -231,6 +231,16 @@
                 updateNoItemsText();
             });
         });
+
+        // Add form validation function
+        window.validateForm = function() {
+            const selectedItems = selectedItemsContainer.querySelectorAll('.selected-item');
+            if (selectedItems.length === 0) {
+                alert('Please select at least one food item before placing the order.');
+                return false;
+            }
+            return true;
+        }
     });
 </script>
 {% endblock %}
